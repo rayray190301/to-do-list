@@ -1,0 +1,16 @@
+.container {
+    width: 500px;
+    margin: 0 auto;
+}
+
+#form-add-todo {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#form-add-todo input {
+    flex: 1;
+    border: 1px solid black;
+    height: 2rem; /* <-- Ponto e vírgula adicionado aqui */
+    padding: 0 auto;
+}
