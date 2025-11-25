@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Lista de Tarefas</title>
+    <style>
+        /* CSS - O Estilo Visual */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 { text-align: center; color: #333; }
+
+        #form-add-todo {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #form-add-todo input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #form-add-todo button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #form-add-todo button:hover { background-color: #218838; }
+
+        ul { list-style: none; padding: 0; }
+
+        li {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Essa é a classe mágica que risca o texto */
+        li.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .btn-delete {
+            margin-left: auto;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>To Do List</h2>
+        
+        <form id="form-add-todo">
+            <input type="text" name="task" placeholder="Nova tarefa..." autocomplete="off">
+            <button type="submit">+</button>
+        </form>
+        
+        <ul id="todo-list">
+            </ul>
+    </div>
+
+    <script>
+        // 1. Pegando os elementos da tela
+        const form = document.getElementById('form-add-todo');
+        const inputTask = form.querySelector('input[name="task"]');
+        const todoList = document.getElementById('todo-list');
+
+        // 2. Carregar tarefas salvas ou iniciar vazio
+        let tasks = JSON.parse(localStorage.getItem('minhas_tarefas')) || [];
+
+        // Função para salvar na memória do navegador
+        function saveToLocalStorage() {
+            localStorage.setItem('minhas_tarefas', JSON.stringify(tasks));
+        }
+
+        // 3. Função que desenha a lista na tela
+        function renderTasks() {
+            todoList.innerHTML = ''; // Limpa a lista visual antes de recriar
+
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                
+                // Se a tarefa estiver marcada como feita, adiciona a classe visual
+                if (task.completed) {
+                    li.classList.add('completed');
+                }
+
+                // Checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = task.completed;
+                checkbox.addEventListener('change', () => toggleTask(index));
+
+                // Texto da tarefa
+                const span = document.createElement('span');
+                span.textContent = task.text;
+
+                // Botão de excluir
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X';
+                deleteBtn.classList.add('btn-delete');
+                deleteBtn.addEventListener('click', () => deleteTask(index));
+
+                // Monta o item
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
+
+                // Coloca na lista
+                todoList.appendChild(li);
+            });
+        }
+
+        // 4. Adicionar Tarefa
+        function addTask(event) {
+            event.preventDefault(); // IMPORTANTE: Impede a página de recarregar sozinha
+            
+            const text = inputTask.value.trim();
+            
+            if (text !== '') {
+                tasks.push({ text: text, completed: false });
+                inputTask.value = '';
+                saveToLocalStorage();
+                renderTasks();
+            }
+        }
+
+        // 5. Marcar como feito (Riscar)
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveToLocalStorage();
+            renderTasks();
+        }
+
+        // 6. Deletar Tarefa
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveToLocalStorage();
+            renderTasks();
+        }
+
+        // Liga o formulário à função
+        form.addEventListener('submit', addTask);
+
+        // Inicia a lista ao abrir a página
+        renderTasks();
+    </script>
+</body>
+</html>
