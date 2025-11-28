@@ -1,93 +1,88 @@
-// 1. Selecionar os elementos do HTML
-const form = document.getElementById('form-add-todo');
-const inputTask = form.querySelector('input[name="task"]');
-const todoList = document.getElementById('todo-list');
+ <script>
+        // Pega os elementos da tela
+        const form = document.getElementById('form-add-todo');
+        const inputTask = form.querySelector('input[name="task"]');
+        const todoList = document.getElementById('todo-list');
 
-// 2. Carregar tarefas salvas ao iniciar (Personalização)
-// Se não tiver nada salvo, começa com um array vazio []
-let tasks = JSON.parse(localStorage.getItem('my_todos')) || [];
+        // Carrega tarefas salvas ou inicia vazio
+        let tasks = JSON.parse(localStorage.getItem('minhas_tarefas')) || [];
 
-// Função para salvar no navegador
-function saveToLocalStorage() {
-    localStorage.setItem('my_todos', JSON.stringify(tasks));
-}
-
-// 3. Função que desenha a lista na tela
-function renderTasks() {
-    todoList.innerHTML = ''; // Limpa a lista atual para não duplicar
-
-    tasks.forEach((task, index) => {
-        // Cria o elemento LI
-        const li = document.createElement('li');
-        
-        // Se a tarefa estiver completa, adiciona a classe CSS
-        if (task.completed) {
-            li.classList.add('completed');
+        // Função para salvar na memória do navegador
+        function saveToLocalStorage() {
+            localStorage.setItem('minhas_tarefas', JSON.stringify(tasks));
         }
 
-        // Cria o Checkbox
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = task.completed;
-        // Evento: ao clicar no checkbox
-        checkbox.addEventListener('change', () => toggleTask(index));
+        // Função que desenha a lista na tela
+        function renderTasks() {
+            todoList.innerHTML = ''; // Limpa a lista visual antes de recriar
 
-        // Cria o Texto
-        const span = document.createElement('span');
-        span.textContent = task.text;
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                
+                // Se a tarefa estiver marcada como feita, adiciona a classe visual
+                if (task.completed) {
+                    li.classList.add('completed');
+                }
 
-        // Cria o Botão de Deletar
-        const deleteBtn = document.createElement('button');
-        deleteBtn.textContent = 'Excluir';
-        deleteBtn.classList.add('btn-delete');
-        // Evento: ao clicar em excluir
-        deleteBtn.addEventListener('click', () => deleteTask(index));
+                // Checkbox
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = task.completed;
+                checkbox.addEventListener('change', () => toggleTask(index));
 
-        // Junta tudo dentro do LI
-        li.appendChild(checkbox);
-        li.appendChild(span);
-        li.appendChild(deleteBtn);
+                // Texto da tarefa
+                const span = document.createElement('span');
+                span.textContent = task.text;
 
-        // Coloca o LI na lista UL
-        todoList.appendChild(li);
-    });
-}
+                // Botão de excluir
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'X';
+                deleteBtn.classList.add('btn-delete');
+                deleteBtn.addEventListener('click', () => deleteTask(index));
 
-// 4. Função para Adicionar Tarefa
-function addTask(event) {
-    event.preventDefault(); // Evita que a página recarregue
+                // Monta o item
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
 
-    const text = inputTask.value.trim(); // Pega o texto e remove espaços extras
+                // Coloca na lista
+                todoList.appendChild(li);
+            });
+        }
 
-    if (text !== '') {
-        // Adiciona ao nosso array de dados
-        tasks.push({
-            text: text,
-            completed: false
-        });
+        // Adiciona Tarefa
+        function addTask(event) {
+            event.preventDefault(); // IMPORTANTE: Impede a página de recarregar sozinha
+            
+            const text = inputTask.value.trim();
+            
+            if (text !== '') {
+                tasks.push({ text: text, completed: false });
+                inputTask.value = '';
+                saveToLocalStorage();
+                renderTasks();
+            }
+        }
 
-        inputTask.value = ''; // Limpa o campo de input
-        saveToLocalStorage(); // Salva
-        renderTasks(); // Atualiza a tela
-    }
-}
+        // Marcar como feito
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            saveToLocalStorage();
+            renderTasks();
+        }
 
-// 5. Função para Marcar/Desmarcar (Toggle)
-function toggleTask(index) {
-    tasks[index].completed = !tasks[index].completed; // Inverte true/false
-    saveToLocalStorage();
-    renderTasks();
-}
+        // Deletar Tarefa
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            saveToLocalStorage();
+            renderTasks();
+        }
 
-// 6. Função para Deletar
-function deleteTask(index) {
-    tasks.splice(index, 1); // Remove 1 item naquela posição
-    saveToLocalStorage();
-    renderTasks();
-}
+        // Liga o formulário à função
+        form.addEventListener('submit', addTask);
 
-// 7. Ouvinte de Evento do Formulário
-form.addEventListener('submit', addTask);
-
-// 8. Renderiza a lista pela primeira vez ao abrir a página
-renderTasks();
+        // Inicia a lista ao abrir a página
+        renderTasks();
+    </script>
+</body>
+</html>

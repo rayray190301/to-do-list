@@ -1,16 +1,72 @@
-.container {
-    width: 500px;
-    margin: 0 auto;
-}
 
-#form-add-todo {
-    display: flex;
-    gap: 0.5rem;
-}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
 
-#form-add-todo input {
-    flex: 1;
-    border: 1px solid black;
-    height: 2rem; /* <-- Ponto e vírgula adicionado aqui */
-    padding: 0 auto;
-}
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 { text-align: center; color: #333; }
+
+        #form-add-todo {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #form-add-todo input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #form-add-todo button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #form-add-todo button:hover { background-color: #218838; }
+
+        ul { list-style: none; padding: 0; }
+
+        li {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        //Classe para dar check em uma tarefa
+        li.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .btn-delete {
+            margin-left: auto;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
